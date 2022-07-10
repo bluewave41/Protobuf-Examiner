@@ -28,7 +28,12 @@ const Cell = memo(function({ data, columnIndex, rowIndex, style }) {
 
     return (
         <div style={style}>
-            <TextByte byte={char} onHover={data.onHover} hoverIndex={data.hoverIndex} index={`${rowIndex} ${columnIndex}`} />
+            <TextByte 
+                byte={char} 
+                onHover={data.onHover} 
+                hoverIndex={data.hoverIndex} 
+                index={columnIndex + rowIndex * 16} 
+            />
         </div>
     )
 }, areEqual);

@@ -6,6 +6,9 @@ const HexByte = (props) => {
     const onMouseEnter = () => {
         props.onHover(props.index);
     }
+    const onMouseLeave = () => {
+        props.onHover(null);
+    }
     const onClick = () => {
         props.onClick(props.index);
     }
@@ -20,6 +23,7 @@ const HexByte = (props) => {
             }}
             onClick={onClick}
             onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
         >
             {props.byte}
         </span>
@@ -33,7 +37,7 @@ const Cell = memo(function ({ data, columnIndex, rowIndex, style }) {
                 byte={data.hex[rowIndex][columnIndex]}
                 onHover={data.onHover}
                 hoverIndex={data.hoverIndex}
-                index={`${rowIndex} ${columnIndex}`}
+                index={columnIndex + rowIndex * 16}
                 onClick={data.onClick}
                 clicked={data.clicked}
             />
