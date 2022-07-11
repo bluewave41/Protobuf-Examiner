@@ -7,7 +7,6 @@ import { useState } from 'react';
 import { getSubField } from '../lib/Utilities';
 
 const FieldEntry = (props) => {
-    console.log('FIELD ENTRY PROPS', props);
     const onTypeChange = (e) => {
         props.onTypeChange(props.field, e.target.value);
     }
@@ -30,24 +29,44 @@ const FieldEntry = (props) => {
     )
 }
 
+const FieldItem = (props) => {
+    console.log('FIELD ITEM', props);
+    const displayField = props.sub ? props.displayField + '_' + props.field : props.field;
+
+    return (
+        <TreeItem nodeId={props} label={displayField} onClick={() => props.onClick(displayField)}> 
+            {props.fields &&
+                Object.keys(props.fields).map(field => {
+                    console.log(field, displayField);
+                    return <FieldItem displayField={displayField} field={field} fields={props.fields[field].fields} onClick={() => props.onClick(displayField)} sub={true} />
+                }
+            )}
+        </TreeItem>
+    )
+}
+
+/*{Object.keys(props.fields).map(topKey => (
+    <TreeItem nodeId={topKey} label={topKey} onClick={() => onClick(topKey)}>
+        {props.fields[topKey].fields && 
+            Object.keys(props.fields[topKey].fields).map(subKey => {
+               return <TreeItem nodeId={`${topKey}_${subKey}`} label={`${topKey}_${subKey}`} onClick={() => onClick(`${topKey}_${subKey}`) }/>
+            })
+        }
+    </TreeItem>
+))}*/
+
 const FieldTree = (props) => {
-    console.log('FIELD TREE PROPS', props);
     const [selected, setSelected] = useState(null);
     const onClick = (e) => {
+        console.log(e)
         setSelected(e);
     }
     return (
         <Box>
             <Box>
                 <TreeView>
-                    {Object.keys(props.fields).map(topKey => (
-                        <TreeItem nodeId={topKey} label={topKey} onClick={() => onClick(topKey)}>
-                            {props.fields[topKey].fields && 
-                                Object.keys(props.fields[topKey].fields).map(subKey => {
-                                   return <TreeItem nodeId={`${topKey}_${subKey}`} label={`${topKey}_${subKey}`} onClick={() => onClick(`${topKey}_${subKey}`) }/>
-                                })
-                            }
-                        </TreeItem>
+                    {Object.keys(props.fields).map(field => (
+                        <FieldItem field={field} fields={props.fields} onClick={(onClick)}/>
                     ))}
                 </TreeView>
             </Box>

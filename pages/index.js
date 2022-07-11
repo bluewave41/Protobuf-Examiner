@@ -35,6 +35,8 @@ const hexprotobuf = (props) => {
             const proto = new ProtobufReader(buffer);
             proto.process();
 
+            console.log(proto);
+
             protobuf.current = proto;
 
             const hex = chunk(chunk(Buffer.from(buffer).toString('hex').toUpperCase(), 2), 16);
@@ -52,27 +54,16 @@ const hexprotobuf = (props) => {
         setClicked(id);
     }
     const onTypeChange = (field, newType) => {
-        debugger;
         const tempSchema = protobuf.current.getSchema();
         field = getSubField(tempSchema, field);
+        field.type = newType;
 
-        tempSchema[field] = {
-            type: newType,
-            fields: null,
-            data: tempSchema[field].data
-        }
-        setSchema({
-            ...schema,
-            [field]: {
-                type: newType,
-                fields: null,
-                data: tempSchema[field].data
-            }
-        })
         const parsed = protobuf.current.parseSchema(ProtoBuilder.build(tempSchema));
 
         //build schema from the response
         console.log('NEW TYPE', parsed);
+
+        setSchema(tempSchema);
     }
 
     if (!hex.length) {
